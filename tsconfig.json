@@ -1,10 +1,6 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "baseUrl": "./src",
-    "paths": {
-      "components": ["components/*"],
-      "game": ["game/*"]
-    }
+    "baseUrl": "./src"
   }
 }
