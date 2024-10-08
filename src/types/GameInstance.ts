@@ -1,6 +1,6 @@
-import Actor from "game/Actor";
-import GameSettings from "./GameSettings";
 import calculatePileSize from "utils/calculatePileSize";
+import Actor from "types/Actor";
+import GameSettings from "types/GameSettings";
 
 interface GameInstance {
   pileSize: number;
@@ -9,24 +9,20 @@ interface GameInstance {
   matchesLeft: number;
   player: Actor;
   bot: Actor;
-  isPlayerTurn: boolean;
 }
 
 export const createGameInstanceFromSettings = (
   gameSettings: GameSettings
 ): GameInstance => {
   const pileSize = calculatePileSize(gameSettings.n);
-  const player: Actor = { isBot: false, currentMatches: 0 };
-  const bot: Actor = { isBot: true, currentMatches: 0 };
 
   return {
     pileSize: pileSize,
     maxMatchesToSelect: gameSettings.m,
     isUserStarts: gameSettings.isUserStarts,
     matchesLeft: pileSize,
-    player,
-    bot,
-    isPlayerTurn: gameSettings.isUserStarts,
+    player: { currentMatches: 0 },
+    bot: { currentMatches: 0 },
   };
 };
 

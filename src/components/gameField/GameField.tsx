@@ -1,23 +1,22 @@
 import Match from "components/match/Match";
-import MatchInfo from "game/MatchInfo";
+import { BotDecisionDelay, chooseMatchesWithDelay } from "game/Bot";
+import MatchInfo from "types/MatchInfo";
 import useGameContext from "hooks/useGameContext";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { ActionTypes } from "reducers/GameReducerActions";
+import { TurnStatus } from "types/GameState";
+import getRandomIntegerInclusive from "utils/getRandomIntegerInclusive";
+import getRandomObjects from "utils/getRandomObjects";
 
-export type GameFieldProps = {
-  matchInfoes: MatchInfo[];
-  onMatchSelect: (id: number) => void;
-};
-
-const GameField = ({ matchInfoes, onMatchSelect }: GameFieldProps) => {
+const GameField = () => {
   const { state, dispatch } = useGameContext();
 
   const selectedMatches = useMemo(() => {
-    return matchInfoes.filter((info) => info.isSelected);
-  }, [matchInfoes]);
+    return state.matches.filter((info) => info.isSelected);
+  }, [state.matches]);
 
   const handleMatchClick = (matchInfo: MatchInfo) => {
-    if (!state.gameInstance.isPlayerTurn) {
+    if (state.turnStatus !== TurnStatus.PLAYER_TURN) {
       return;
     }
 
@@ -27,11 +26,12 @@ const GameField = ({ matchInfoes, onMatchSelect }: GameFieldProps) => {
     ) {
       return;
     }
-    onMatchSelect(matchInfo.id);
+
+    dispatch({ type: ActionTypes.SELECT_MATCH, payload: { matchInfo } });
   };
 
   const handlePlayerAction = () => {
-    if (!state.gameInstance.isPlayerTurn) {
+    if (state.turnStatus !== TurnStatus.PLAYER_TURN) {
       return;
     }
 
@@ -39,12 +39,83 @@ const GameField = ({ matchInfoes, onMatchSelect }: GameFieldProps) => {
       type: ActionTypes.TAKE_MATCHES,
       payload: {
         matchesCount: selectedMatches.length,
-        isPlayer: state.gameInstance.isPlayerTurn,
+        isPlayer: true,
       },
     });
 
-    dispatch({ type: ActionTypes.NEXT_TURN });
+    dispatch({
+      type: ActionTypes.SET_TURN_STATUS,
+      payload: { turnStatus: TurnStatus.WAIT_BOT_TO_CHOOSE },
+    });
   };
+
+  // bot choose matches
+  useEffect(() => {
+    if (
+      state.turnStatus !== TurnStatus.WAIT_BOT_TO_CHOOSE ||
+      selectedMatches.length !== 0 ||
+      state.matches.length === 0
+    ) {
+      return;
+    }
+
+    const handleBotAction = async () => {
+      // TODO: Make AI smarter
+      const randomCount = getRandomIntegerInclusive(
+        1,
+        state.gameInstance.maxMatchesToSelect
+      );
+      const randomMatches = getRandomObjects(state.matches, randomCount);
+
+      await chooseMatchesWithDelay((matchInfo: MatchInfo) => {
+        dispatch({ type: ActionTypes.SELECT_MATCH, payload: { matchInfo } });
+      }, randomMatches);
+
+      setTimeout(() => {
+        dispatch({
+          type: ActionTypes.SET_TURN_STATUS,
+          payload: { turnStatus: TurnStatus.BOT_TURN },
+        });
+      }, BotDecisionDelay);
+    };
+
+    handleBotAction();
+  }, [
+    dispatch,
+    selectedMatches.length,
+    state.gameInstance.maxMatchesToSelect,
+    state.matches,
+    state.turnStatus,
+  ]);
+
+  // bot takes matches
+  useEffect(() => {
+    if (
+      state.turnStatus !== TurnStatus.BOT_TURN ||
+      selectedMatches.length === 0 ||
+      state.matches.length === 0
+    ) {
+      return;
+    }
+
+    dispatch({
+      type: ActionTypes.TAKE_MATCHES,
+      payload: {
+        matchesCount: selectedMatches.length,
+        isPlayer: false,
+      },
+    });
+
+    dispatch({
+      type: ActionTypes.SET_TURN_STATUS,
+      payload: { turnStatus: TurnStatus.PLAYER_TURN },
+    });
+  }, [
+    dispatch,
+    selectedMatches.length,
+    state.matches.length,
+    state.turnStatus,
+  ]);
 
   return (
     <div className="flex flex-col w-full gap-2 divide-y-2 divide-slate-700 p-2">
@@ -55,7 +126,7 @@ const GameField = ({ matchInfoes, onMatchSelect }: GameFieldProps) => {
         </span>
       </h2>
       <div className="grid grid-flow-row gap-y-10 grid-cols-[repeat(auto-fit,_15px)] py-6">
-        {matchInfoes.map((info) => (
+        {state.matches.map((info) => (
           <Match
             key={info.id}
             id={info.id}
@@ -73,11 +144,12 @@ const GameField = ({ matchInfoes, onMatchSelect }: GameFieldProps) => {
       <button
         onClick={handlePlayerAction}
         disabled={
-          !state.gameInstance.isPlayerTurn || selectedMatches.length === 0
+          state.turnStatus != TurnStatus.PLAYER_TURN ||
+          selectedMatches.length === 0
         }
         className="btn btn-primary"
       >
-        {state.gameInstance.isPlayerTurn
+        {state.turnStatus === TurnStatus.PLAYER_TURN
           ? selectedMatches.length === 0
             ? "Please select a match"
             : "Take"

@@ -1,5 +1,5 @@
 import PreGameScreen from "components/preGameScreen/PreGameScreen";
-import GameStatus from "game/GameStatus";
+import GameStatus from "types/GameStatus";
 import PostGameScreen from "components/postGameScreen/PostGameScreen";
 import InvalidScreen from "components/invalidScreen/InvalidScreen";
 import GameScreen from "components/gameScreen/GameScreen";

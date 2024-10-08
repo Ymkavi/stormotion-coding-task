@@ -1,21 +1,52 @@
-import { createGameInstanceFromSettings } from "game/GameInstance";
 import { Actions, ActionTypes } from "./GameReducerActions";
-import GameState from "./GameState";
-import GameStatus from "game/GameStatus";
+import { createGameInstanceFromSettings } from "types/GameInstance";
+import GameState, { TurnStatus } from "types/GameState";
+import GameStatus from "types/GameStatus";
 
 const gameReducer = (state: GameState, action: Actions) => {
   switch (action.type) {
     case ActionTypes.SET_GAME_SETTINGS: {
+      const { settings } = action.payload;
+
       return {
-        gameSettings: action.payload,
-        gameInstance: createGameInstanceFromSettings(action.payload),
+        gameSettings: settings,
+        gameInstance: createGameInstanceFromSettings(settings),
         gameStatus: GameStatus.Game,
-      };
+        matches: [],
+        turnStatus: settings.isUserStarts
+          ? TurnStatus.PLAYER_TURN
+          : TurnStatus.WAIT_BOT_TO_CHOOSE,
+      } satisfies GameState;
     }
-    case ActionTypes.NEXT_TURN: {
+    case ActionTypes.CREATE_MATCHES: {
       const newState = structuredClone(state);
 
-      newState.gameInstance.isPlayerTurn = !newState.gameInstance.isPlayerTurn;
+      newState.matches = Array.from(
+        { length: action.payload.count },
+        (_, index) => ({
+          id: index,
+          isSelected: false,
+        })
+      );
+
+      return newState;
+    }
+    case ActionTypes.SELECT_MATCH: {
+      const newState = structuredClone(state);
+
+      newState.matches = state.matches.map((info) => {
+        if (info.id === action.payload.matchInfo.id) {
+          return { id: info.id, isSelected: !info.isSelected };
+        }
+        return info;
+      });
+
+      return newState;
+    }
+    case ActionTypes.SET_TURN_STATUS: {
+      const newState = structuredClone(state);
+
+      newState.turnStatus = action.payload.turnStatus;
 
       return newState;
     }

@@ -1,33 +1,17 @@
 import GameField from "components/gameField/GameField";
-import MatchInfo from "game/MatchInfo";
 import useGameContext from "hooks/useGameContext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { ActionTypes } from "reducers/GameReducerActions";
 
 const GameScreen = () => {
-  const [matchInfoes, setMatchInfoes] = useState<MatchInfo[]>([]);
-  const { state } = useGameContext();
+  const { state, dispatch } = useGameContext();
 
   useEffect(() => {
-    const matchInfos = Array.from(
-      { length: state.gameInstance.matchesLeft },
-      (_, index) => ({
-        id: index,
-        isSelected: false,
-      })
-    );
-    setMatchInfoes(matchInfos);
-  }, [state.gameInstance.matchesLeft]);
-
-  const handleMatchSelect = (id: number) => {
-    const newMatches = matchInfoes.map((info) => {
-      if (info.id === id) {
-        return { ...info, isSelected: !info.isSelected };
-      }
-      return info;
+    dispatch({
+      type: ActionTypes.CREATE_MATCHES,
+      payload: { count: state.gameInstance.matchesLeft },
     });
-
-    setMatchInfoes(newMatches);
-  };
+  }, [dispatch, state.gameInstance.matchesLeft]);
 
   return (
     <div className="card card-bordered flex justify-center items-center h-full w-4/5 bg-gray-900">
@@ -41,10 +25,7 @@ const GameScreen = () => {
             <p>Hand bot</p>
           </div>
           <div className="order-3 md:order-2 w-full md:grow">
-            <GameField
-              matchInfoes={matchInfoes}
-              onMatchSelect={handleMatchSelect}
-            />
+            <GameField />
           </div>
         </div>
       </div>

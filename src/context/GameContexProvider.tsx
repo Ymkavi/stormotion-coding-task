@@ -1,14 +1,7 @@
-import { createContext, Dispatch, ReactNode, useReducer } from "react";
-import GameState, { initialGameState } from "reducers/GameState";
-import { Actions } from "reducers/GameReducerActions";
+import { ReactNode, useReducer } from "react";
 import gameReducer from "reducers/GameReducer";
-
-type GameContextType = {
-  state: GameState;
-  dispatch: Dispatch<Actions>;
-};
-
-export const GameContext = createContext<GameContextType | null>(null);
+import GameContext from "./GameContext";
+import { initialGameState } from "types/GameState";
 
 type ContextProviderProps = {
   children: ReactNode;

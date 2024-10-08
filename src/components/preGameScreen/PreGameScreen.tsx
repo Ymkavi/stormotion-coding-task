@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
 import calculatePileSize from "utils/calculatePileSize";
-import GameSettings from "game/GameSettings";
+import GameSettings from "types/GameSettings";
 import useGameContext from "hooks/useGameContext";
 import { ActionTypes } from "reducers/GameReducerActions";
 
@@ -61,8 +61,8 @@ const PreGameScreen = () => {
     trigger("m");
   }, [trigger, watchedN]);
 
-  const handleGameStart = (gameSettings: GameSettings) => {
-    dispatch({ type: ActionTypes.SET_GAME_SETTINGS, payload: gameSettings });
+  const handleGameStart = (settings: GameSettings) => {
+    dispatch({ type: ActionTypes.SET_GAME_SETTINGS, payload: { settings } });
   };
 
   return (

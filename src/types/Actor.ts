@@ -1,5 +1,4 @@
 interface Actor {
-  isBot: boolean;
   currentMatches: number;
 }
 
