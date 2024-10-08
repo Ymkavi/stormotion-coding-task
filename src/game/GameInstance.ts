@@ -7,7 +7,9 @@ interface GameInstance {
   maxMatchesToSelect: number;
   isUserStarts: boolean;
   matchesLeft: number;
-  actors: Actor[];
+  player: Actor;
+  bot: Actor;
+  isPlayerTurn: boolean;
 }
 
 export const createGameInstanceFromSettings = (
@@ -22,7 +24,9 @@ export const createGameInstanceFromSettings = (
     maxMatchesToSelect: gameSettings.m,
     isUserStarts: gameSettings.isUserStarts,
     matchesLeft: pileSize,
-    actors: [player, bot],
+    player,
+    bot,
+    isPlayerTurn: gameSettings.isUserStarts,
   };
 };
 

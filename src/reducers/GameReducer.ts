@@ -12,11 +12,26 @@ const gameReducer = (state: GameState, action: Actions) => {
         gameStatus: GameStatus.Game,
       };
     }
-    case ActionTypes.SELECT_MATCH: {
-      return state;
+    case ActionTypes.NEXT_TURN: {
+      const newState = structuredClone(state);
+
+      newState.gameInstance.isPlayerTurn = !newState.gameInstance.isPlayerTurn;
+
+      return newState;
     }
     case ActionTypes.TAKE_MATCHES: {
-      return state;
+      const newState = structuredClone(state);
+      const { matchesCount, isPlayer } = action.payload;
+
+      newState.gameInstance.matchesLeft -= matchesCount;
+
+      if (isPlayer) {
+        newState.gameInstance.player.currentMatches += matchesCount;
+      } else {
+        newState.gameInstance.bot.currentMatches += matchesCount;
+      }
+
+      return newState;
     }
     case ActionTypes.CLEAR_SETTINGS: {
       return state;

@@ -1,51 +1,29 @@
-import { useCallback, useState } from "react";
-import {
-  IGameSettings,
-  PreGameScreen,
-} from "components/preGameScreen/PreGameScreen";
-import GameState from "game/GameState";
+import PreGameScreen from "components/preGameScreen/PreGameScreen";
+import GameStatus from "game/GameStatus";
 import PostGameScreen from "components/postGameScreen/PostGameScreen";
 import InvalidScreen from "components/invalidScreen/InvalidScreen";
 import GameScreen from "components/gameScreen/GameScreen";
-import { SubmitHandler } from "react-hook-form";
+import useGameContext from "hooks/useGameContext";
 
 const App = () => {
-  const [gameState, setGameState] = useState<GameState>(GameState.PreGame);
-  const [gameSettings, setGameSettings] = useState<IGameSettings>({
-    n: 12,
-    m: 3,
-    isUserStarts: true,
-  });
+  const { state } = useGameContext();
 
-  const handleGameStart: SubmitHandler<IGameSettings> = (data) => {
-    setGameSettings(data);
-    setGameState(GameState.Game);
+  const getComponentByState = (gameState: GameStatus) => {
+    switch (gameState) {
+      case GameStatus.PreGame:
+        return <PreGameScreen />;
+      case GameStatus.Game:
+        return <GameScreen />;
+      case GameStatus.PostGame:
+        return <PostGameScreen />;
+      default:
+        return <InvalidScreen />;
+    }
   };
 
-  const getComponentByState = useCallback(
-    (gameState: GameState) => {
-      switch (gameState) {
-        case GameState.PreGame:
-          return (
-            <PreGameScreen
-              gameSettings={gameSettings}
-              onGameStart={handleGameStart}
-            />
-          );
-        case GameState.Game:
-          return <GameScreen />;
-        case GameState.PostGame:
-          return <PostGameScreen />;
-        default:
-          return <InvalidScreen />;
-      }
-    },
-    [gameSettings]
-  );
-
   return (
-    <main className="flex-grow text-white bg-gray-800 flex justify-center items-center">
-      {getComponentByState(gameState)}
+    <main className="flex-grow min-h-full text-white bg-gray-800 flex justify-center items-center">
+      {getComponentByState(state.gameStatus)}
     </main>
   );
 };

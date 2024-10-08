@@ -1,9 +1,8 @@
 import GameSettings from "game/GameSettings";
-import MatchInfo from "game/MatchInfo";
 
 export enum ActionTypes {
   SET_GAME_SETTINGS = "SET_GAME_SETTINGS",
-  SELECT_MATCH = "SELECT_MATCH",
+  NEXT_TURN = "NEXT_TURN",
   TAKE_MATCHES = "TAKE_MATCHES",
   CLEAR_SETTINGS = "CLEAR_SETTINGS",
 }
@@ -13,14 +12,13 @@ export type SetGameSettingsAction = {
   payload: GameSettings;
 };
 
-export type SelectMatchAction = {
-  type: ActionTypes.SELECT_MATCH;
-  payload: MatchInfo;
+export type NextTurnAction = {
+  type: ActionTypes.NEXT_TURN;
 };
 
 export type TakeMatchesAction = {
   type: ActionTypes.TAKE_MATCHES;
-  payload: any;
+  payload: { matchesCount: number; isPlayer: boolean };
 };
 
 export type ClearSettingsAction = {
@@ -29,6 +27,6 @@ export type ClearSettingsAction = {
 
 export type Actions =
   | SetGameSettingsAction
-  | SelectMatchAction
+  | NextTurnAction
   | TakeMatchesAction
   | ClearSettingsAction;
