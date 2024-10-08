@@ -7,6 +7,10 @@ import {
   ComputerDesktopIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
+import calculatePileSize from "utils/calculatePileSize";
+import GameSettings from "game/GameSettings";
+import useGameContext from "hooks/useGameContext";
+import { ActionTypes } from "reducers/GameReducerActions";
 
 const FormSchema = z
   .object({
@@ -31,28 +35,22 @@ const FormSchema = z
     message: "m must be less than n",
   });
 
-type IGameSettings = z.infer<typeof FormSchema>;
-
-interface PreGameScreenProps {
-  gameSettings: IGameSettings;
-  onGameStart: SubmitHandler<IGameSettings>;
-}
-
-const PreGameScreen = ({ gameSettings, onGameStart }: PreGameScreenProps) => {
+const PreGameScreen = () => {
+  const { state, dispatch } = useGameContext();
   const {
     register,
     handleSubmit,
     control,
     trigger,
     formState: { errors, isSubmitting },
-  } = useForm<IGameSettings>({
+  } = useForm<GameSettings>({
     mode: "onChange",
     reValidateMode: "onBlur",
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      n: gameSettings.n,
-      m: gameSettings.m,
-      isUserStarts: gameSettings.isUserStarts,
+      n: state.gameSettings.n,
+      m: state.gameSettings.m,
+      isUserStarts: state.gameSettings.isUserStarts,
     },
   });
 
@@ -63,13 +61,15 @@ const PreGameScreen = ({ gameSettings, onGameStart }: PreGameScreenProps) => {
     trigger("m");
   }, [trigger, watchedN]);
 
-  const calculatePileSize = (n: number) => n * 2 + 1;
+  const handleGameStart = (gameSettings: GameSettings) => {
+    dispatch({ type: ActionTypes.SET_GAME_SETTINGS, payload: gameSettings });
+  };
 
   return (
     <div className="card card-bordered flex justify-center items-center h-full bg-gray-900">
       <div className="card-body">
         <h2 className="card-title justify-center">Game Preferences</h2>
-        <form onSubmit={handleSubmit(onGameStart)}>
+        <form onSubmit={handleSubmit(handleGameStart)}>
           <div className="form-control border rounded-lg input-bordered p-2 mb-2">
             <label className="label">
               <span className="label-text">n</span>
@@ -148,4 +148,4 @@ const PreGameScreen = ({ gameSettings, onGameStart }: PreGameScreenProps) => {
   );
 };
 
-export { PreGameScreen, type IGameSettings };
+export default PreGameScreen;
