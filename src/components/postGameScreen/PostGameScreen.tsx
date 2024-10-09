@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import useGameContext from "hooks/useGameContext";
 import { ActionTypes } from "reducers/GameReducerActions";
 import GameStatus from "types/GameStatus";
@@ -40,8 +41,27 @@ const PostGameScreen = () => {
           {winner === "player" && playerWinnerTitle}
           {winner === "bot" && botWinnerTitle}
         </p>
+        <div className="border border-1 rounded border-slate-700 p-2">
+          <p
+            className={classNames({
+              "font-semibold text-success": winner === "player",
+            })}
+          >
+            Player has {state.gameInstance.player.currentMatches} matches.
+          </p>
+          <p
+            className={classNames({
+              "font-semibold text-success": winner === "bot",
+            })}
+          >
+            Bot has {state.gameInstance.bot.currentMatches} matches.
+          </p>
+        </div>
         <div className="card-actions justify-center">
-          <button onClick={handlePlayAgainClick} className="btn btn-primary">
+          <button
+            onClick={handlePlayAgainClick}
+            className="btn btn-primary w-full"
+          >
             Play Again
           </button>
         </div>

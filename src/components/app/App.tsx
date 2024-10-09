@@ -1,7 +1,6 @@
 import PreGameScreen from "components/preGameScreen/PreGameScreen";
 import GameStatus from "types/GameStatus";
 import PostGameScreen from "components/postGameScreen/PostGameScreen";
-import InvalidScreen from "components/invalidScreen/InvalidScreen";
 import GameScreen from "components/gameScreen/GameScreen";
 import useGameContext from "hooks/useGameContext";
 
@@ -16,8 +15,6 @@ const App = () => {
         return <GameScreen />;
       case GameStatus.PostGame:
         return <PostGameScreen />;
-      default:
-        return <InvalidScreen />;
     }
   };
 

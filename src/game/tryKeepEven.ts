@@ -1,24 +1,4 @@
-import MatchInfo from "types/MatchInfo";
 import GameInstance from "types/GameInstance";
-
-/** Bot decision delay in ms*/
-const BotDecisionDelay = 700;
-
-const chooseMatchesWithDelay = (
-  callback: (MatchInfo: MatchInfo) => void,
-  matchInfos: MatchInfo[]
-) => {
-  const promises = matchInfos.map((value, index) => {
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        callback(value);
-        resolve();
-      }, BotDecisionDelay + index * BotDecisionDelay);
-    });
-  });
-
-  return Promise.all(promises);
-};
 
 /**
  * If the bot already has an odd number of matches, it will try to take an odd number of matches to reach an even total.
@@ -46,4 +26,4 @@ const tryKeepEven = (gameInstance: GameInstance): number => {
   return Math.min(matchesLeft, maxMatchesToSelect);
 };
 
-export { chooseMatchesWithDelay, tryKeepEven, BotDecisionDelay };
+export default tryKeepEven;

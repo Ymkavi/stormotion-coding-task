@@ -1,11 +1,14 @@
 import Match from "components/match/Match";
-import { BotDecisionDelay, chooseMatchesWithDelay } from "game/Bot";
+import {
+  BotDecisionDelay,
+  chooseMatchesWithDelay,
+  tryKeepEven,
+} from "game/Bot";
 import MatchInfo from "types/MatchInfo";
 import useGameContext from "hooks/useGameContext";
 import { useEffect, useMemo } from "react";
 import { ActionTypes } from "reducers/GameReducerActions";
 import { TurnStatus } from "types/GameState";
-import getRandomIntegerInclusive from "utils/getRandomIntegerInclusive";
 import getRandomObjects from "utils/getRandomObjects";
 import GameStatus from "types/GameStatus";
 
@@ -61,12 +64,9 @@ const GameField = () => {
     }
 
     const handleBotAction = async () => {
-      // TODO: Make AI smarter
-      const randomCount = getRandomIntegerInclusive(
-        1,
-        state.gameInstance.maxMatchesToSelect
-      );
-      const randomMatches = getRandomObjects(state.matches, randomCount);
+      const matchesToTake = tryKeepEven(state.gameInstance);
+
+      const randomMatches = getRandomObjects(state.matches, matchesToTake);
 
       await chooseMatchesWithDelay((matchInfo: MatchInfo) => {
         dispatch({ type: ActionTypes.SELECT_MATCH, payload: { matchInfo } });
@@ -84,7 +84,7 @@ const GameField = () => {
   }, [
     dispatch,
     selectedMatches.length,
-    state.gameInstance.maxMatchesToSelect,
+    state.gameInstance,
     state.matches,
     state.turnStatus,
   ]);

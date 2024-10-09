@@ -43,9 +43,10 @@ const PreGameScreen = () => {
     handleSubmit,
     control,
     trigger,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<GameSettings>({
-    mode: "onChange",
+    mode: "onBlur",
     reValidateMode: "onBlur",
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -136,6 +137,13 @@ const PreGameScreen = () => {
           <div className="card-actions justify-center">
             <button type="submit" className="btn btn-primary w-full">
               {isSubmitting ? "Starting..." : "Start"}
+            </button>
+            <button
+              onClick={() => reset()}
+              type="button"
+              className="btn btn-xs btn-link text-slate-700"
+            >
+              Reset to default
             </button>
           </div>
         </form>
