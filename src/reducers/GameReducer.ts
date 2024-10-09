@@ -71,9 +71,6 @@ const gameReducer = (state: GameState, action: Actions) => {
 
       return newState;
     }
-    case ActionTypes.CLEAR_SETTINGS: {
-      return state;
-    }
   }
 };
 

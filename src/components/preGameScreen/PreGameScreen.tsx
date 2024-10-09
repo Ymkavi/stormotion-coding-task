@@ -6,7 +6,7 @@ import {
   UserIcon,
   ComputerDesktopIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import calculatePileSize from "utils/calculatePileSize";
 import GameSettings from "types/GameSettings";
 import useGameContext from "hooks/useGameContext";

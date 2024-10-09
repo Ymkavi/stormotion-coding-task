@@ -3,7 +3,7 @@ import GameField from "components/gameField/GameField";
 import Hand from "components/hand/Hand";
 import TurnIndicator from "components/turnIndicator/TurnIndicator";
 import useGameContext from "hooks/useGameContext";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { ActionTypes } from "reducers/GameReducerActions";
 import { ActorType } from "types/Actor";
 

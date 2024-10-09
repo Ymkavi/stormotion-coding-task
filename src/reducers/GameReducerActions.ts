@@ -11,41 +11,36 @@ export enum ActionTypes {
   SET_TURN_STATUS = "SET_TURN_STATUS",
   TAKE_MATCHES = "TAKE_MATCHES",
   SET_GAME_STATUS = "SET_GAME_STATUS",
-  CLEAR_SETTINGS = "CLEAR_SETTINGS",
 }
 
-export type SetGameSettingsAction = {
+type SetGameSettingsAction = {
   type: ActionTypes.SET_GAME_SETTINGS;
   payload: { settings: GameSettings };
 };
 
-export type CreateMatchesAction = {
+type CreateMatchesAction = {
   type: ActionTypes.CREATE_MATCHES;
   payload: { count: number };
 };
 
-export type ToggleSelectMatchAction = {
+type ToggleSelectMatchAction = {
   type: ActionTypes.SELECT_MATCH;
   payload: { matchInfo: MatchInfo };
 };
 
-export type SetTurnStatusAction = {
+type SetTurnStatusAction = {
   type: ActionTypes.SET_TURN_STATUS;
   payload: { turnStatus: TurnStatus };
 };
 
-export type TakeMatchesAction = {
+type TakeMatchesAction = {
   type: ActionTypes.TAKE_MATCHES;
   payload: { matchesCount: number; actorType: ActorType };
 };
 
-export type SetGameStatusAction = {
+type SetGameStatusAction = {
   type: ActionTypes.SET_GAME_STATUS;
   payload: { gameStatus: GameStatus };
-};
-
-export type ClearSettingsAction = {
-  type: ActionTypes.CLEAR_SETTINGS;
 };
 
 export type Actions =
@@ -54,5 +49,4 @@ export type Actions =
   | ToggleSelectMatchAction
   | SetTurnStatusAction
   | TakeMatchesAction
-  | SetGameStatusAction
-  | ClearSettingsAction;
+  | SetGameStatusAction;

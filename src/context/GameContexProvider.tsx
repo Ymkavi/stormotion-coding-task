@@ -1,4 +1,4 @@
-import { ReactNode, useReducer } from "react";
+import React, { ReactNode, useReducer } from "react";
 import gameReducer from "reducers/GameReducer";
 import GameContext from "./GameContext";
 import { initialGameState } from "types/GameState";

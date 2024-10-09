@@ -1,3 +1,4 @@
+/** Inputs of game */
 interface GameSettings {
   n: number;
   m: number;

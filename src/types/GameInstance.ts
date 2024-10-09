@@ -2,10 +2,10 @@ import calculatePileSize from "utils/calculatePileSize";
 import Actor from "types/Actor";
 import GameSettings from "types/GameSettings";
 
+/** Info about the current game. */
 interface GameInstance {
   pileSize: number;
   maxMatchesToSelect: number;
-  isUserStarts: boolean;
   matchesLeft: number;
   player: Actor;
   bot: Actor;
@@ -19,7 +19,6 @@ export const createGameInstanceFromSettings = (
   return {
     pileSize: pileSize,
     maxMatchesToSelect: gameSettings.m,
-    isUserStarts: gameSettings.isUserStarts,
     matchesLeft: pileSize,
     player: { currentMatches: 0 },
     bot: { currentMatches: 0 },

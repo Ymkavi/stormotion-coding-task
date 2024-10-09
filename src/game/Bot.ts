@@ -4,6 +4,12 @@ import GameInstance from "types/GameInstance";
 /** Bot decision delay in ms*/
 const BotDecisionDelay = 700;
 
+/**
+ * Executes a callback function for each MatchInfo one by one.
+ * @param callback A function to be called for each MatchInfo.
+ * @param matchInfos An array of MatchInfo objects to process.
+ * @returns A promise that resolves when all match information has been processed.
+ */
 const chooseMatchesWithDelay = (
   callback: (MatchInfo: MatchInfo) => void,
   matchInfos: MatchInfo[]

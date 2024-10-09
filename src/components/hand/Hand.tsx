@@ -1,3 +1,4 @@
+import React from "react";
 import Actor from "types/Actor";
 
 type HandProps = {

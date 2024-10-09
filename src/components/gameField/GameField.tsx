@@ -6,7 +6,7 @@ import {
 } from "game/Bot";
 import MatchInfo from "types/MatchInfo";
 import useGameContext from "hooks/useGameContext";
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { ActionTypes } from "reducers/GameReducerActions";
 import { TurnStatus } from "types/GameState";
 import getRandomObjects from "utils/getRandomObjects";

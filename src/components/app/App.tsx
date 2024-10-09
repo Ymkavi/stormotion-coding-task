@@ -1,3 +1,4 @@
+import React from "react";
 import PreGameScreen from "components/preGameScreen/PreGameScreen";
 import GameStatus from "types/GameStatus";
 import PostGameScreen from "components/postGameScreen/PostGameScreen";
