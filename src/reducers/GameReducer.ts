@@ -52,11 +52,11 @@ const gameReducer = (state: GameState, action: Actions) => {
     }
     case ActionTypes.TAKE_MATCHES: {
       const newState = structuredClone(state);
-      const { matchesCount, isPlayer } = action.payload;
+      const { matchesCount, actorType } = action.payload;
 
       newState.gameInstance.matchesLeft -= matchesCount;
 
-      if (isPlayer) {
+      if (actorType === "player") {
         newState.gameInstance.player.currentMatches += matchesCount;
       } else {
         newState.gameInstance.bot.currentMatches += matchesCount;

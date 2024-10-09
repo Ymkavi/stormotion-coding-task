@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useForm, useWatch } from "react-hook-form";
+import { FieldError, useForm, useWatch } from "react-hook-form";
 import {
   InformationCircleIcon,
   UserIcon,
@@ -11,6 +11,7 @@ import calculatePileSize from "utils/calculatePileSize";
 import GameSettings from "types/GameSettings";
 import useGameContext from "hooks/useGameContext";
 import { ActionTypes } from "reducers/GameReducerActions";
+import classNames from "classnames";
 
 const FormSchema = z
   .object({
@@ -65,6 +66,9 @@ const PreGameScreen = () => {
     dispatch({ type: ActionTypes.SET_GAME_SETTINGS, payload: { settings } });
   };
 
+  const inputStyles = (fieldError?: FieldError) =>
+    classNames("input inputBordered", { "input-error": fieldError });
+
   return (
     <div className="card card-bordered flex justify-center items-center h-full bg-gray-900">
       <div className="card-body">
@@ -84,14 +88,11 @@ const PreGameScreen = () => {
                 </div>
               )}
             </label>
-            <input
-              {...register("n")}
-              className={`input input-bordered ${
-                errors.n ? "input-error" : ""
-              }`}
-            />
+            <input {...register("n")} className={inputStyles(errors.n)} />
             {errors.n && (
-              <span className="text-xs text-error">{errors.n.message}</span>
+              <span className="text-xs text-error mt-2">
+                {errors.n.message}
+              </span>
             )}
           </div>
           <div className="form-control border rounded-lg input-bordered p-2 mb-2">
@@ -106,14 +107,9 @@ const PreGameScreen = () => {
                 </div>
               </div>
             </label>
-            <input
-              {...register("m")}
-              className={`input input-bordered focus:outline-0 ${
-                errors.m ? "border-red-500 focus:border-red-500" : ""
-              }`}
-            />
+            <input {...register("m")} className={inputStyles(errors.m)} />
             {errors.m && (
-              <span className="text-xs text-red-600 font-semibold">
+              <span className="text-xs text-error mt-2">
                 {errors.m.message}
               </span>
             )}
@@ -123,7 +119,7 @@ const PreGameScreen = () => {
               <span className="label-text self-start">First turn</span>
               <div className="flex items-center gap-2">
                 <span className="flex">
-                  <ComputerDesktopIcon className="size-6 mr-2 text-blue-300" />{" "}
+                  <ComputerDesktopIcon className="size-6 mr-2 text-blue-300" />
                   Bot
                 </span>
                 <input

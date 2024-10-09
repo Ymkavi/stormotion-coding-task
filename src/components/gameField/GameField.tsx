@@ -39,7 +39,7 @@ const GameField = () => {
       type: ActionTypes.TAKE_MATCHES,
       payload: {
         matchesCount: selectedMatches.length,
-        isPlayer: true,
+        actorType: "player",
       },
     });
 
@@ -102,7 +102,7 @@ const GameField = () => {
       type: ActionTypes.TAKE_MATCHES,
       payload: {
         matchesCount: selectedMatches.length,
-        isPlayer: false,
+        actorType: "bot",
       },
     });
 
@@ -117,24 +117,42 @@ const GameField = () => {
     state.turnStatus,
   ]);
 
+  const confirmButtonContent = (): JSX.Element => {
+    const loadingDots = (
+      <span className="loading loading-dots loading-xs"></span>
+    );
+
+    if (state.turnStatus === TurnStatus.PLAYER_TURN) {
+      if (selectedMatches.length === 0) {
+        return <>Please select a match</>;
+      }
+      return <>Take</>;
+    }
+
+    return <>Waiting for bot's turn {loadingDots}</>;
+  };
+
   return (
-    <div className="flex flex-col w-full gap-2 divide-y-2 divide-slate-700 p-2">
+    <div className="flex flex-col w-full gap-2 border-2 border-slate-700 p-2">
       <h2 className="text-lg text-center text-info">
         Matches:
         <span className="text-white pl-2">
           {state.gameInstance.matchesLeft}/{state.gameInstance.pileSize}
         </span>
       </h2>
-      <div className="grid grid-flow-row gap-y-10 grid-cols-[repeat(auto-fit,_15px)] py-6">
+      <div className="divider divider-accent"></div>
+      <div className="grid grid-flow-row place-content-center gap-y-10 grid-cols-[repeat(auto-fit,_15px)] py-6">
         {state.matches.map((info) => (
           <Match
             key={info.id}
             id={info.id}
             isSelected={info.isSelected}
+            turnStatus={state.turnStatus}
             handleClick={() => handleMatchClick(info)}
           />
         ))}
       </div>
+      <div className="divider divider-accent"></div>
       <h2 className="text-lg text-center text-info">
         Selected:
         <span className="text-white pl-2">
@@ -149,11 +167,7 @@ const GameField = () => {
         }
         className="btn btn-primary"
       >
-        {state.turnStatus === TurnStatus.PLAYER_TURN
-          ? selectedMatches.length === 0
-            ? "Please select a match"
-            : "Take"
-          : "Waiting for bot's turn..."}
+        {confirmButtonContent()}
       </button>
     </div>
   );

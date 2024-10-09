@@ -1,6 +1,7 @@
 import GameSettings from "types/GameSettings";
 import MatchInfo from "types/MatchInfo";
 import { TurnStatus } from "types/GameState";
+import { ActorType } from "types/Actor";
 
 export enum ActionTypes {
   SET_GAME_SETTINGS = "SET_GAME_SETTINGS",
@@ -33,7 +34,7 @@ export type SetTurnStatusAction = {
 
 export type TakeMatchesAction = {
   type: ActionTypes.TAKE_MATCHES;
-  payload: { matchesCount: number; isPlayer: boolean };
+  payload: { matchesCount: number; actorType: ActorType };
 };
 
 export type ClearSettingsAction = {
