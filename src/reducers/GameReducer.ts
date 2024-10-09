@@ -64,6 +64,13 @@ const gameReducer = (state: GameState, action: Actions) => {
 
       return newState;
     }
+    case ActionTypes.SET_GAME_STATUS: {
+      const newState = structuredClone(state);
+
+      newState.gameStatus = action.payload.gameStatus;
+
+      return newState;
+    }
     case ActionTypes.CLEAR_SETTINGS: {
       return state;
     }

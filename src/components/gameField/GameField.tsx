@@ -7,6 +7,7 @@ import { ActionTypes } from "reducers/GameReducerActions";
 import { TurnStatus } from "types/GameState";
 import getRandomIntegerInclusive from "utils/getRandomIntegerInclusive";
 import getRandomObjects from "utils/getRandomObjects";
+import GameStatus from "types/GameStatus";
 
 const GameField = () => {
   const { state, dispatch } = useGameContext();
@@ -116,6 +117,16 @@ const GameField = () => {
     state.matches.length,
     state.turnStatus,
   ]);
+
+  // check if game is ended
+  useEffect(() => {
+    if (state.gameInstance.matchesLeft <= 0) {
+      dispatch({
+        type: ActionTypes.SET_GAME_STATUS,
+        payload: { gameStatus: GameStatus.PostGame },
+      });
+    }
+  }, [dispatch, state.gameInstance.matchesLeft]);
 
   const confirmButtonContent = (): JSX.Element => {
     const loadingDots = (
